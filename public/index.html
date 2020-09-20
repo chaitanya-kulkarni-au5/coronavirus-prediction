@@ -1,7 +1,4 @@
 <html>
-
-<body>
-
   <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -15,17 +12,24 @@
       integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous">
     </script>
   </head>
-  <div class="col">
+<body>
+
+ 
+  <div class="bg-primary p-2">
     <h1 class="text-center pt-3">COVID PREDICTION</h1>
     <h4 class="text-center pd-3">(Powered by Machine Learning)</h4>
+  </div>
+  <div class="col-12">
+
+    
     <div class="row">
       <div class="col-6">
         <form name="Covid" method="post" action="">
-          <div class=" my-2 p-3 border border-secondary">
-            <h3>Please select below symptoms: </h3>
+          <div class=" my-2 p-3 border rounded">
+            <h5>Please select below symptoms: </h5>
             <div>
               <input type="checkbox" name="" id="Breathing_Problem">
-              <label for="">Breacthing Problem</label>
+              <label for="">Breathing Problem</label>
             </div>
             <div>
               <input type="checkbox" name="" id="Fever">
@@ -55,8 +59,8 @@
 
 
 
-          <div class="my-2 p-3 border border-secondary">
-            <h3>Please select below Pre-health conditions: </h3>
+          <div class="my-2 p-3 border rounded">
+            <h5>Please select below Pre-health conditions: </h5>
             <div>
               <input type="checkbox" name="" id="Asthma">
               <label for="">Asthma</label>
@@ -84,8 +88,8 @@
           </div>
 
 
-          <div class="my-2 p-3 border border-secondary">
-            <h3>Please select below options : </h3>
+          <div class="my-2 p-3 border rounded">
+            <h5>Please select below options : </h5>
             <div>
               <input type="checkbox" name="" id="Abroad_travel">
               <label for="">Abroad travel</label>
@@ -121,17 +125,16 @@
         </form>
       </div>
       <div class="col-6">
-        <div class="my-2 p-3 border border-secondary">
-          <h3>RESULTS:</h3>
-          <p>Result Value</p>
+        <div class="my-2 p-3 border rounded">
+          <h5>RESULTS:</h5>
+          <p id='result'>&nbsp;</p>
         </div>
-        <div class="my-2 p-3 border border-secondary">
-          <h3>Maharashtra Live Data:</h3>
+        <div class="my-2 p-3 border rounded">
+          <h5>India Live Data:</h5>
+          <p>Date: <span id="date"></span></p>
           <p>Confirmed: <span id="confirmed"></span></p>
           <p>Deceased: <span id="deceased"></span></p>
-          <p>Other: <span id="other"></span></p>
           <p>Recovered: <span id="recovered"></span></p>
-          <p>Tested: <span id="tested"></span></p>
         </div>
       </div>
     </div>
@@ -139,31 +142,24 @@
 </body>
 <script>
   $("document").ready(function () {
-
+  
 
     $.ajax({
       type: "GET",
-      url: "https://api.covid19india.org/v4/data.json",
+      url: "https://api.covid19india.org/data.json",
       async: false,
       dataType: "JSON",
       success: function (response) {
-        console.log(response.MH.total)
-        let MHData = response.MH.total
-        document.getElementById('confirmed').innerHTML = MHData.confirmed
-        document.getElementById('deceased').innerHTML = MHData.deceased
-        document.getElementById('other').innerHTML = MHData.other
-        document.getElementById('recovered').innerHTML = MHData.recovered
-        document.getElementById('tested').innerHTML = MHData.tested
+        let IndData = response.cases_time_series[response.cases_time_series.length-1]
+        document.getElementById('date').innerHTML = IndData.date
+        $('#confirmed').html(`<span>${IndData.totalconfirmed}</span> <span class='text-danger'>+${IndData.dailyconfirmed}</span>`) 
+        $('#deceased').html(`<span>${IndData.totaldeceased}</span> <span class='text-danger'>+${IndData.dailydeceased}</span>`)
+        $('#recovered').html(`<span>${IndData.totalrecovered}</span> <span class='text-success'>+${IndData.dailyrecovered}</span>`)
       }
-    });
-
-    console.log(window.location.host)
-
-
+    });  
+    var server = `ws://${window.location.host}`;
     $("#Submit").click(function () {
-      let port = `ws:${window.location.host}`
-      var socket = new WebSocket(port);
-      console.log(socket)
+      var socket = new WebSocket(server);
       json_obj = [];
       items = {};
       items["Breathing_Problem"] = $('input:checkbox[id=Breathing_Problem]').is(
@@ -196,8 +192,18 @@
       json_string = JSON.stringify(json_obj);
       socket.onopen = function (event) {
         socket.send(json_string);
-        alert('data send');
       };
+      socket.onmessage = function(event){
+        $("#result").html("")
+        window.scrollTo(0,0)
+        if(event.data==='1'){
+          $("#result").html("<span class='text-danger'>You might be COVID Positive. 🙏 </span>")
+        }
+        else{
+          $("#result").html("<span class='text-success'>You might be Safe. 💪 </span>")
+        }
+        $('input:checkbox').prop('checked',false);
+      };     
     });
   });
 </script>
