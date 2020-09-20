@@ -157,9 +157,13 @@
       }
     });
 
+    console.log(window.location.host)
+
 
     $("#Submit").click(function () {
-      var socket = new WebSocket(server);
+      let port = `ws:${window.location.host}`
+      var socket = new WebSocket(port);
+      console.log(socket)
       json_obj = [];
       items = {};
       items["Breathing_Problem"] = $('input:checkbox[id=Breathing_Problem]').is(
