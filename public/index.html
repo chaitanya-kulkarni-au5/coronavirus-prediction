@@ -1,0 +1,201 @@
+<html>
+
+<body>
+
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous">
+    </script>
+  </head>
+  <div class="col">
+    <h1 class="text-center pt-3">COVID PREDICTION</h1>
+    <h4 class="text-center pd-3">(Powered by Machine Learning)</h4>
+    <div class="row">
+      <div class="col-6">
+        <form name="Covid" method="post" action="">
+          <div class=" my-2 p-3 border border-secondary">
+            <h3>Please select below symptoms: </h3>
+            <div>
+              <input type="checkbox" name="" id="Breathing_Problem">
+              <label for="">Breacthing Problem</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Fever">
+              <label for="">Fever</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Dry_Cough">
+              <label for="">Dry Cough</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Sore_throat">
+              <label for="">Sore throat</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Running_Nose">
+              <label for="">Running Nose</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Headache">
+              <label for="">Headache</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Fatigue">
+              <label for="">Fatigue</label>
+            </div>
+          </div>
+
+
+
+          <div class="my-2 p-3 border border-secondary">
+            <h3>Please select below Pre-health conditions: </h3>
+            <div>
+              <input type="checkbox" name="" id="Asthma">
+              <label for="">Asthma</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Heart_Disease">
+              <label for="">Heart Disease</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Diabetes">
+              <label for="">Diabetes</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Hyper_Tension">
+              <label for="">Hyper Tension</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Chronic_Lung_Disease">
+              <label for="">Chronic Lung Disease</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Gastrointestinal">
+              <label for="">Gastrointestinal</label>
+            </div>
+          </div>
+
+
+          <div class="my-2 p-3 border border-secondary">
+            <h3>Please select below options : </h3>
+            <div>
+              <input type="checkbox" name="" id="Abroad_travel">
+              <label for="">Abroad travel</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Contact_with_COVID_Patient">
+              <label for="">Contact with COVID Patient</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Attended_Large_Gathering">
+              <label for="">Attended Large Gathering</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Visited_Public_Exposed_Places">
+              <label for="">Visited Public Exposed Places</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Family_working">
+              <label for="">Family working</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Wearin_Masks">
+              <label for="">Wearin Masks</label>
+            </div>
+            <div>
+              <input type="checkbox" name="" id="Sanitization_from_Market">
+              <label for="">Sanitization from Market</label>
+            </div>
+          </div>
+          <td>
+            <button class="btn btn-primary w-100" type="button" id="Submit">Submit</button>
+
+        </form>
+      </div>
+      <div class="col-6">
+        <div class="my-2 p-3 border border-secondary">
+          <h3>RESULTS:</h3>
+          <p>Result Value</p>
+        </div>
+        <div class="my-2 p-3 border border-secondary">
+          <h3>Maharashtra Live Data:</h3>
+          <p>Confirmed: <span id="confirmed"></span></p>
+          <p>Deceased: <span id="deceased"></span></p>
+          <p>Other: <span id="other"></span></p>
+          <p>Recovered: <span id="recovered"></span></p>
+          <p>Tested: <span id="tested"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  $("document").ready(function () {
+
+
+    $.ajax({
+      type: "GET",
+      url: "https://api.covid19india.org/v4/data.json",
+      async: false,
+      dataType: "JSON",
+      success: function (response) {
+        console.log(response.MH.total)
+        let MHData = response.MH.total
+        document.getElementById('confirmed').innerHTML = MHData.confirmed
+        document.getElementById('deceased').innerHTML = MHData.deceased
+        document.getElementById('other').innerHTML = MHData.other
+        document.getElementById('recovered').innerHTML = MHData.recovered
+        document.getElementById('tested').innerHTML = MHData.tested
+      }
+    });
+
+
+    $("#Submit").click(function () {
+      var socket = new WebSocket(server);
+      json_obj = [];
+      items = {};
+      items["Breathing_Problem"] = $('input:checkbox[id=Breathing_Problem]').is(
+        ':checked');
+      items["Fever"] = $('input:checkbox[id=Fever]').is(':checked');
+      items["Dry_Cough"] = $('input:checkbox[id=Dry_Cough]').is(':checked');
+      items["Sore_throat"] = $('input:checkbox[id=Sore_throat]').is(':checked');
+      items["Running_Nose"] = $('input:checkbox[id=Running_Nose]').is(':checked');
+      items["Asthma"] = $('input:checkbox[id=Asthma]').is(':checked');
+      items["Chronic_Lung_Disease"] = $('input:checkbox[id=Chronic_Lung_Disease]').is(
+        ':checked');
+      items["Headache"] = $('input:checkbox[id=Headache]').is(':checked');
+      items["Heart_Disease"] = $('input:checkbox[id=Heart_Disease]').is(':checked');
+      items["Diabetes"] = $('input:checkbox[id=Diabetes]').is(':checked');
+      items["Hyper_Tension"] = $('input:checkbox[id=Hyper_Tension]').is(':checked');
+      items["Fatigue"] = $('input:checkbox[id=Fatigue]').is(':checked');
+      items["Gastrointestinal"] = $('input:checkbox[id=Gastrointestinal]').is(':checked');
+      items["Abroad_travel"] = $('input:checkbox[id=Abroad_travel]').is(':checked');
+      items["Contact_with_COVID_Patient"] = $(
+        'input:checkbox[id=Contact_with_COVID_Patient]').is(':checked');
+      items["Attended_Large_Gathering"] = $('input:checkbox[id=Attended_Large_Gathering]')
+        .is(':checked');
+      items["Visited_Public_Exposed_Places"] = $(
+        'input:checkbox[id=Visited_Public_Exposed_Places]').is(':checked');
+      items["Family_working"] = $('input:checkbox[id=Family_working]').is(':checked');
+      items["Wearin_Masks"] = $('input:checkbox[id=Wearin_Masks]').is(':checked');
+      items["Sanitization_from_Market"] = $('input:checkbox[id=Sanitization_from_Market]')
+        .is(':checked');
+      json_obj.push(items);
+      json_string = JSON.stringify(json_obj);
+      socket.onopen = function (event) {
+        socket.send(json_string);
+        alert('data send');
+      };
+    });
+  });
+</script>
+
+</html>
