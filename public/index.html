@@ -157,7 +157,7 @@
         $('#recovered').html(`<span>${IndData.totalrecovered}</span> <span class='text-success'>+${IndData.dailyrecovered}</span>`)
       }
     });   
-    var server = 'ws://13.59.193.182:443';
+    var server = 'wss://13.59.193.182:443';
     $("#Submit").click(function () {
       var socket = new WebSocket(server);
       json_obj = [];
