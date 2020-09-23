@@ -156,9 +156,9 @@
         $('#deceased').html(`<span>${IndData.totaldeceased}</span> <span class='text-danger'>+${IndData.dailydeceased}</span>`)
         $('#recovered').html(`<span>${IndData.totalrecovered}</span> <span class='text-success'>+${IndData.dailyrecovered}</span>`)
       }
-    });  
+    });   
+    var server = 'ws://13.59.193.182:443';
     $("#Submit").click(function () {
-      var server = 'wss://13.59.193.182:443'
       var socket = new WebSocket(server);
       json_obj = [];
       items = {};
